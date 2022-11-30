@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import 'next_page.dart';
 
@@ -30,6 +31,7 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   final myController = TextEditingController();
+  String text = "";
 
   @override
   void dispose() {
@@ -47,16 +49,20 @@ class _RootPageState extends State<RootPage> {
         children: [
           TextField(
             controller: myController,
+            onChanged: (value) {
+              setState(() {
+                text = value;
+              });
+            },
+          ),
+          Container(
+            child: Text(text),
           ),
           ElevatedButton(
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Text(myController.text),
-                      );
-                    });
+                setState(() {
+                  text = myController.text;
+                });
               },
               child: const Text('Click me')),
           Center(
@@ -67,7 +73,8 @@ class _RootPageState extends State<RootPage> {
                     context: context,
                     builder: (context) => AlertDialog(
                           title: const Text('Title'),
-                          content: const TextField(
+                          content: TextField(
+                            controller: myController,
                             autofocus: true,
                             decoration:
                                 InputDecoration(hintText: 'Enter your text'),
@@ -75,6 +82,9 @@ class _RootPageState extends State<RootPage> {
                           actions: [
                             TextButton(
                                 onPressed: () {
+                                  setState(() {
+                                    text = myController.text;
+                                  });
                                   Navigator.of(context).pop();
                                 },
                                 child: const Text("Submit")),
